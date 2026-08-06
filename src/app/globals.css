@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
 
@@ -8,11 +10,31 @@
   --color-brand-purple-dark: #4c1d95;
   --color-brand-green: #16a34a;
   --color-brand-green-light: #22c55e;
-  --color-ink: #1f2937;
-  --color-paper: #fafaf9;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+}
+
+:root {
+  --paper: #f3f4f6;
+  --card: #ffffff;
+  --line: #e4e4e7;
+  --ink: #1f2937;
+}
+
+.dark {
+  --paper: #0b0d12;
+  --card: #191d26;
+  --line: #2c313c;
+  --ink: #e6e8ec;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--paper);
+  color: var(--ink);
 }
