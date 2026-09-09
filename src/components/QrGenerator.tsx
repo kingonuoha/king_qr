@@ -27,7 +27,7 @@ export default function QrGenerator() {
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 sm:px-6">
+    <main className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-4 sm:px-6">
       <header className="flex items-center justify-between gap-2.5">
         <div className="flex items-center gap-2.5">
           <span className="h-6 w-1.5 rounded-full bg-brand-green" />
@@ -43,7 +43,7 @@ export default function QrGenerator() {
 
       <TypeSelector value={type} onChange={handleTypeChange} />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto]">
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_auto]">
         <section className="rounded-2xl bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.06)] ring-1 ring-line">
           <h2 className="mb-4 text-lg font-semibold text-ink">
             {QR_TYPE_LABELS[type]}
@@ -55,13 +55,16 @@ export default function QrGenerator() {
             }
           />
         </section>
-        <aside className="flex flex-col items-center gap-4 rounded-2xl bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.06)] ring-1 ring-line">
-          <h2 className="text-lg font-semibold text-ink">Preview</h2>
+        <aside className="flex w-full flex-col items-center gap-2.5 self-start rounded-2xl bg-card p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.06)] ring-1 ring-line lg:w-[380px]">
           <QrPreview payload={payload} color={color} />
-          <ColorPickerPanel style={color} onChange={setColor} />
+          {payload && (
+            <>
+              <ColorPickerPanel style={color} onChange={setColor} />
+              <ExportPanel payload={payload} type={type} color={color} />
+            </>
+          )}
         </aside>
       </div>
-      <ExportPanel payload={payload} type={type} color={color} />
     </main>
   );
 }

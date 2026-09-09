@@ -13,7 +13,7 @@ export default function QrPreview({
   const { containerRef, renderError } = useQrCode(payload, color.foreground);
 
   return (
-    <div className="flex aspect-square w-full max-w-[260px] items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-zinc-200">
+    <div className="flex aspect-square w-full max-w-[248px] items-center justify-center rounded-2xl bg-white p-3 shadow-sm ring-1 ring-zinc-200">
       {payload ? (
         renderError ? (
           <p className="px-4 text-center text-sm text-zinc-400">

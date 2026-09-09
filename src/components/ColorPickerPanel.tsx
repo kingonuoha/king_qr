@@ -47,7 +47,10 @@ export default function ColorPickerPanel({
               aria-label={preset.label}
               aria-pressed={active}
               title={preset.label}
-              onClick={() => apply(preset.hex)}
+              onClick={() => {
+                apply(preset.hex);
+                setPickerOpen(false);
+              }}
               className={`h-7 w-7 rounded-full ring-1 ring-line transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple/50 ${
                 active
                   ? "scale-110 ring-2 ring-brand-purple"
@@ -76,34 +79,35 @@ export default function ColorPickerPanel({
         </button>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <input
-          value={hexText}
-          onChange={(e) => handleHexInput(e.target.value)}
-          placeholder="#000000"
-          spellCheck={false}
-          aria-label="Color hex code"
-          aria-invalid={hexInvalid}
-          className={`w-full rounded-lg border bg-card px-3 py-2 font-mono text-sm text-ink outline-none transition focus:ring-2 ${
-            hexInvalid
-              ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
-              : "border-line focus:border-brand-purple focus:ring-brand-purple/30"
-          }`}
-        />
-        {hexInvalid && (
-          <span className="text-xs text-red-600 dark:text-red-400">
-            Enter a valid hex code, e.g. #1d4ed8
-          </span>
-        )}
-      </div>
-
       {pickerOpen && (
-        <HexColorPicker
-          color={normalizeHex(value) ?? "#000000"}
-          onChange={apply}
-          style={{ width: "100%" }}
-          aria-label="Color picker"
-        />
+        <>
+          <div className="flex flex-col gap-1.5">
+            <input
+              value={hexText}
+              onChange={(e) => handleHexInput(e.target.value)}
+              placeholder="#000000"
+              spellCheck={false}
+              aria-label="Color hex code"
+              aria-invalid={hexInvalid}
+              className={`w-full rounded-lg border bg-card px-3 py-2 font-mono text-sm text-ink outline-none transition focus:ring-2 ${
+                hexInvalid
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-line focus:border-brand-purple focus:ring-brand-purple/30"
+              }`}
+            />
+            {hexInvalid && (
+              <span className="text-xs text-red-600 dark:text-red-400">
+                Enter a valid hex code, e.g. #1d4ed8
+              </span>
+            )}
+          </div>
+          <HexColorPicker
+            color={normalizeHex(value) ?? "#000000"}
+            onChange={apply}
+            style={{ width: "100%" }}
+            aria-label="Color picker"
+          />
+        </>
       )}
 
       {isLowContrast(value) && (
