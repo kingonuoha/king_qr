@@ -1,20 +1,49 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const THEME_STORAGE_KEY = "king-qr-theme";
+
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  window.addEventListener("storage", onChange);
+  return () => {
+    observer.disconnect();
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function getSnapshot() {
+  return document.documentElement.classList.contains("dark");
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+  const dark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
+  const toggle = () => {
+    const next = !dark;
+    document.documentElement.classList.toggle("dark", next);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
+    } catch {
+      // private-mode storage failures are non-fatal; theme still applies for the session
+    }
+  };
 
   return (
     <button
       type="button"
       aria-label="Toggle dark mode"
       aria-pressed={dark}
-      onClick={() => setDark((prev) => !prev)}
+      onClick={toggle}
       className="rounded-lg bg-card p-2 text-ink ring-1 ring-line outline-none transition hover:ring-brand-purple focus-visible:ring-2 focus-visible:ring-brand-purple"
     >
       {dark ? (
