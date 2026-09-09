@@ -1,9 +1,16 @@
 "use client";
 
 import { useQrCode } from "@/hooks/useQrCode";
+import type { QrColorStyle } from "@/lib/qr/types";
 
-export default function QrPreview({ payload }: { payload: string | null }) {
-  const { containerRef, renderError } = useQrCode(payload);
+export default function QrPreview({
+  payload,
+  color,
+}: {
+  payload: string | null;
+  color: QrColorStyle;
+}) {
+  const { containerRef, renderError } = useQrCode(payload, color.foreground);
 
   return (
     <div className="flex aspect-square w-full max-w-[260px] items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-zinc-200">

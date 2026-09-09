@@ -1,5 +1,6 @@
 import QRCodeStyling from "qr-code-styling";
 import type { FileExtension, Options } from "qr-code-styling";
+import { DEFAULT_QR_COLOR } from "@/lib/qr/types";
 
 export type DownloadFormat = "png" | "svg";
 export type DownloadSize = "small" | "medium" | "large";
@@ -10,7 +11,11 @@ export const DOWNLOAD_SIZES: Record<DownloadSize, number> = {
   large: 1024,
 };
 
-export function createQrOptions(data: string, size: number): Options {
+export function createQrOptions(
+  data: string,
+  size: number,
+  foreground: string = DEFAULT_QR_COLOR
+): Options {
   return {
     type: "canvas",
     width: size,
@@ -22,15 +27,15 @@ export function createQrOptions(data: string, size: number): Options {
     },
     dotsOptions: {
       type: "square",
-      color: "#000000",
+      color: foreground,
     },
     cornersSquareOptions: {
       type: "square",
-      color: "#000000",
+      color: foreground,
     },
     cornersDotOptions: {
       type: "square",
-      color: "#000000",
+      color: foreground,
     },
     backgroundOptions: {
       color: "#ffffff",
@@ -65,17 +70,24 @@ export async function downloadQr(
   data: string,
   format: DownloadFormat,
   size: DownloadSize,
-  typeSlug: string
+  typeSlug: string,
+  foreground: string = DEFAULT_QR_COLOR
 ): Promise<void> {
-  const qr = new QRCodeStyling(createQrOptions(data, DOWNLOAD_SIZES[size]));
+  const qr = new QRCodeStyling(
+    createQrOptions(data, DOWNLOAD_SIZES[size], foreground)
+  );
   const raw = await qr.getRawData(fileExtension(format));
   if (!raw) return;
   const blob = raw instanceof Blob ? raw : new Blob([new Uint8Array(raw)], { type: `image/${fileExtension(format)}` });
   downloadBlob(blob, `king-qr-${typeSlug}.${fileExtension(format)}`);
 }
 
-export async function copyQrToClipboard(data: string, size: number): Promise<boolean> {
-  const qr = new QRCodeStyling(createQrOptions(data, size));
+export async function copyQrToClipboard(
+  data: string,
+  size: number,
+  foreground: string = DEFAULT_QR_COLOR
+): Promise<boolean> {
+  const qr = new QRCodeStyling(createQrOptions(data, size, foreground));
   const raw = await qr.getRawData("png");
   if (!raw) return false;
   const blob = raw instanceof Blob ? raw : new Blob([new Uint8Array(raw)], { type: "image/png" });

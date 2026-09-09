@@ -64,3 +64,17 @@ export const QR_TYPE_LABELS: Record<QRType, QRTypeLabel> = {
   contact: "Contact",
   email: "Email",
 };
+
+export interface QrColorStyle {
+  foreground: string;
+}
+
+export const DEFAULT_QR_COLOR = "#000000";
+
+export const PRESET_COLORS: { hex: string; label: string }[] = [
+  { hex: "#000000", label: "Black" },
+  { hex: "#1d4ed8", label: "Blue" },
+  { hex: "#047857", label: "Green" },
+  { hex: "#b91c1c", label: "Red" },
+  { hex: "#6d28d9", label: "Purple" },
+];

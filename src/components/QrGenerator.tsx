@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import type { Forms, QRType } from "@/lib/qr/types";
-import { emptyForms, QR_TYPE_LABELS } from "@/lib/qr/types";
+import type { Forms, QrColorStyle, QRType } from "@/lib/qr/types";
+import { DEFAULT_QR_COLOR, emptyForms, QR_TYPE_LABELS } from "@/lib/qr/types";
 import { buildPayload } from "@/lib/qr/payloads";
 import { FORM_COMPONENTS } from "@/components/forms";
 import TypeSelector from "@/components/TypeSelector";
 import QrPreview from "@/components/QrPreview";
+import ColorPickerPanel from "@/components/ColorPickerPanel";
 import ExportPanel from "@/components/ExportPanel";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function QrGenerator() {
   const [type, setType] = useState<QRType>("url");
   const [forms, setForms] = useState<Forms>(emptyForms);
+  const [color, setColor] = useState<QrColorStyle>({
+    foreground: DEFAULT_QR_COLOR,
+  });
 
   const payload = buildPayload(type, forms[type]);
   const ActiveForm = FORM_COMPONENTS[type];
@@ -53,10 +57,11 @@ export default function QrGenerator() {
         </section>
         <aside className="flex flex-col items-center gap-4 rounded-2xl bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.06)] ring-1 ring-line">
           <h2 className="text-lg font-semibold text-ink">Preview</h2>
-          <QrPreview payload={payload} />
+          <QrPreview payload={payload} color={color} />
+          <ColorPickerPanel style={color} onChange={setColor} />
         </aside>
       </div>
-      <ExportPanel payload={payload} type={type} />
+      <ExportPanel payload={payload} type={type} color={color} />
     </main>
   );
 }

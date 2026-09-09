@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { QRType } from "@/lib/qr/types";
+import type { QrColorStyle, QRType } from "@/lib/qr/types";
 import {
   copyQrToClipboard,
   DOWNLOAD_SIZES,
@@ -23,9 +23,11 @@ const SIZE_OPTIONS: { key: DownloadSize; label: string }[] = [
 export default function ExportPanel({
   payload,
   type,
+  color,
 }: {
   payload: string | null;
   type: QRType;
+  color: QrColorStyle;
 }) {
   const [format, setFormat] = useState<DownloadFormat>("png");
   const [size, setSize] = useState<DownloadSize>("medium");
@@ -47,7 +49,7 @@ export default function ExportPanel({
     setBusy(true);
     setError(null);
     try {
-      await downloadQr(payload, format, size, type);
+      await downloadQr(payload, format, size, type, color.foreground);
     } catch {
       setError("Download failed — try again.");
     } finally {
@@ -61,7 +63,11 @@ export default function ExportPanel({
     setError(null);
     setCopied(false);
     try {
-      const ok = await copyQrToClipboard(payload, DOWNLOAD_SIZES[size]);
+        const ok = await copyQrToClipboard(
+          payload,
+          DOWNLOAD_SIZES[size],
+          color.foreground
+        );
       if (ok) {
         setCopied(true);
         if (copiedTimer.current !== null) {
